@@ -9,7 +9,7 @@ app.use(express.json());
 
 const uri = "VOTRE_DB_CONNECTION_STRING";
 const clientOptions = {
-  serverApi: { version: "1", strict: true, deprecationErrors: true },
+    serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
 
 mongoose.connect(uri, clientOptions).then(() => console.log("Connected to DB"));
@@ -17,5 +17,7 @@ mongoose.connect(uri, clientOptions).then(() => console.log("Connected to DB"));
 app.use("/", MainRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+    console.log(`Example app listening on port ${port}`);
 });
+
+console.log("test first commit to my branch ");
