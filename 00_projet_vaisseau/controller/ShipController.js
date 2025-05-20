@@ -71,8 +71,20 @@ const ShipController = {
             });
         }
     },
-    remove: (req, res) => {
+    remove: async (req, res) => {
         // TODO
+        try {
+            const ship = await ShipModel.findByIdAndDelete(req.params.shipId);
+            res.status(200).json({
+                status: "success",
+                data: null,
+            });
+        } catch (err) {
+            res.status(404).json({
+                status: "fail",
+                message: `La composante a ete supprimée avec succes `,
+            });
+        }
     },
 };
 export default ShipController;

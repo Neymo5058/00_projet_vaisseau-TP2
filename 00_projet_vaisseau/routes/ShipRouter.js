@@ -6,6 +6,7 @@ ShipRouter.post("/ships", ShipController.create);
 ShipRouter.get("/ships", ShipController.getAll);
 ShipRouter.get("/ships/:shipId", ShipController.getById);
 ShipRouter.post("/ships/batch", ShipController.batchCreate);
+ShipRouter.delete("/ships/delete/:shipId", ShipController.remove);
 
 // TODO : you have to implements the routes to use the ships
 ShipRouter.post("/:shipId/attack", () => {
