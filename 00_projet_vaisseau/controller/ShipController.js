@@ -1,11 +1,39 @@
 import { Types } from "mongoose";
 import ShipModel from "../model/ShipModel.js";
+
 const ShipController = {
-    getAll: (req, res) => {
+    getAll: async (req, res) => {
         // TODO
+        try {
+            const ships = await ShipModel.find();
+            res.status(200).json({
+                status: "success",
+                results: ships.length,
+                data: {
+                    ships: ships,
+                },
+            });
+        } catch (err) {
+            res.status(404).json({
+                status: "fail",
+                message: `Vaisseaux non-trouvé`,
+            });
+        }
     },
-    getById: (req, res) => {
-        // TODO : should respond with an object like
+    getById: async (req, res) => {
+        // TODO
+        try {
+            const ship = await ShipModel.findById(req.params.shipId);
+
+            res.status(200).json({
+                status: "success",
+                data: {
+                    ship: ship,
+                    message: `Voici le vaisseaux recherché 🔍 `,
+                },
+            });
+            console.log(ship);
+        } catch (err) {}
     },
     create: async (req, res) => {
         // TODO
@@ -22,12 +50,26 @@ const ShipController = {
         } catch (err) {
             res.status(400).json({
                 status: "fail",
-                message: err.message,
+                message: "Ce vaisseaux exsiste deja 🚩",
             });
         }
     },
-    batchCreate: (req, res) => {
+    batchCreate: async (req, res) => {
         // TODO : receive an array of ships and create them all. Should be usefull to populate you database
+        try {
+            const ships = await ShipModel.create(req.body, { ordered: false });
+            res.status(201).json({
+                status: "success",
+                data: {
+                    ships,
+                },
+            });
+        } catch (err) {
+            res.status(400).json({
+                status: "fail",
+                message: "Les composante non pas populé",
+            });
+        }
     },
     remove: (req, res) => {
         // TODO

@@ -3,8 +3,9 @@ import ShipController from "../controller/ShipController.js";
 
 const ShipRouter = express.Router();
 ShipRouter.post("/ships", ShipController.create);
-ShipRouter.get("/", ShipController.getAll);
-ShipRouter.get("/:shipId", ShipController.getById);
+ShipRouter.get("/ships", ShipController.getAll);
+ShipRouter.get("/ships/:shipId", ShipController.getById);
+ShipRouter.post("/ships/batch", ShipController.batchCreate);
 
 // TODO : you have to implements the routes to use the ships
 ShipRouter.post("/:shipId/attack", () => {
