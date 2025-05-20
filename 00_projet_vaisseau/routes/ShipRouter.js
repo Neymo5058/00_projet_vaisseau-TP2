@@ -4,7 +4,7 @@ import ShipController from "../controller/ShipController.js";
 const ShipRouter = express.Router();
 ShipRouter.post("/ships", ShipController.create);
 ShipRouter.get("/ships", ShipController.getAll);
-ShipRouter.get("/ships/:shipId", ShipController.getById);
+ShipRouter.get("/:shipId", ShipController.getById);
 ShipRouter.post("/ships/batch", ShipController.batchCreate);
 ShipRouter.delete("/ships/delete/:shipId", ShipController.remove);
 
