@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Gaz Thruster",
+    "type": "thruster",
+    "stats": { "speedBoost": 20 }
+  },
+  {
+    "name": "Electric Thruster",
+    "type": "thruster",
+    "stats": { "speedBoost": 35 }
+  },
+  {
+    "name": "Carbon Fiber Hull",
+    "type": "hull",
+    "stats": { "healthBoost": 100 }
+  },
+  {
+    "name": "Stainless Steel Hull",
+    "type": "hull",
+    "stats": { "healthBoost": 120 }
+  },
+  {
+    "name": "Electromagnetic Shield",
+    "type": "shield",
+    "stats": { "absorption": 30 }
+  },
+  {
+    "name": "Anti-Radiation Shield",
+    "type": "shield",
+    "stats": { "absorption": 45 }
+  },
+  {
+    "name": "Gaz Engine",
+    "type": "engine",
+    "stats": { "speedBoost": 25 }
+  },
+  {
+    "name": "Nuclear Engine",
+    "type": "engine",
+    "stats": { "speedBoost": 50 }
+  },
+  {
+    "name": "Missile Launcher",
+    "type": "weapon",
+    "stats": { "damage": 50, "ammo": 5 }
+  },
+  {
+    "name": "Railgun",
+    "type": "weapon",
+    "stats": { "damage": 70, "ammo": 3 }
+  },
+  {
+    "name": "Drone Launcher",
+    "type": "weapon",
+    "stats": { "damage": 40, "ammo": 6 }
+  },
+  {
+    "name": "3D Radar",
+    "type": "radar",
+    "stats": { "detectionRange": 120 }
+  },
+  {
+    "name": "Short-Range Radar",
+    "type": "radar",
+    "stats": { "detectionRange": 60 }
+  },
+  {
+    "name": "Nuclear Battery",
+    "type": "battery",
+    "stats": { "durability": 100 }
+  },
+  {
+    "name": "Lithium-Ion Battery",
+    "type": "battery",
+    "stats": { "durability": 80 }
+  }
+]
