@@ -3,42 +3,51 @@ import ComponentModel from '../model/componentModel.js';
 
 const ComponentController = {
   getAll: async (req, res) => {
-    // TODO
     try {
       const components = await ComponentModel.find();
 
       res.status(200).json({
         status: 'success',
         results: components.length,
-        data: {
-          components: components,
-        },
+        data: { components },
       });
     } catch (err) {
-      res.status(404).json({
+      res.status(500).json({
         status: 'fail',
         message: `Composante non-trouvé`,
       });
     }
   },
   getById: async (req, res) => {
-    // TODO
     try {
       const component = await ComponentModel.findById(req.params.componentId);
-      if (!component) return res.status(404).json({ message: 'Introuvable' });
+      if (!component)
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Composante recherché ',
+        });
 
       res.status(200).json({
         status: 'success',
-        data: {
-          component: component,
-          message: `Composante recherché  `,
-        },
+        message: `Composante recherché  `,
+        data: { component },
       });
-    } catch (err) {}
+    } catch (err) {
+      res.status(500).json({
+        status: 'fail',
+        message: `Erreur interne du serveur `,
+      });
+    }
   },
   create: async (req, res) => {
-    // TODO
     try {
+      const { name, category } = req.body;
+      if (!name || !category) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Veuillez fournir un nom et une catégorie',
+        });
+      }
       const newComponent = await ComponentModel.create(req.body);
 
       res.status(201).json({
@@ -50,7 +59,8 @@ const ComponentController = {
     } catch (err) {
       res.status(400).json({
         status: 'fail',
-        message: 'Cette composante exsiste deja',
+        message:
+          'Mauvaise requête, cette composante éxiste déja ou les données sont invalides',
       });
     }
   },
@@ -73,19 +83,19 @@ const ComponentController = {
         },
       });
     } catch (err) {
-      res.status(404).json({
+      res.status(400).json({
         status: 'fail',
-        message: err,
+        message: 'Mauvaise requete, donnée invalides',
       });
     }
   },
   remove: async (req, res) => {
-    // TODO
     try {
       const component = await ComponentModel.findByIdAndDelete(
         req.params.componentId
       );
-      if (!component) return res.status(404).json({ message: 'Introuvable' });
+      if (!component)
+        return res.status(404).json({ message: 'Composante Introuvable' });
 
       res.status(200).json({
         status: 'success',
@@ -94,7 +104,7 @@ const ComponentController = {
     } catch (err) {
       res.status(404).json({
         status: 'fail',
-        message: `La composante a ete supprimée avec succes `,
+        message: `Auncune composnte trouvé avec cet ID `,
       });
     }
   },

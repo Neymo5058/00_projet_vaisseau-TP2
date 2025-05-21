@@ -25,6 +25,6 @@ const ComponentSchema = new mongoose.Schema({
   },
 });
 
-const ComponentModel = mongoose.model('Component', ComponentSchema);
+const ComponentModel = mongoose.model('component', ComponentSchema);
 
 export default ComponentModel;

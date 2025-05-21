@@ -9,7 +9,7 @@ const port = 3000;
 app.use(express.json());
 
 const uri =
-  'mongodb+srv://username123:sami5058@cluster0.dy6dz3y.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+  'mongodb+srv://username123:sami5058@cluster0.dy6dz3y.mongodb.net/00_projet_vaisseau?retryWrites=true&w=majority&appName=Cluster0';
 const clientOptions = {
   serverApi: { version: '1', strict: true, deprecationErrors: true },
 };
@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
   res.send(`Bienvenue sur la page principale`);
 });
 
+app.use('/', MainRouter);
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
