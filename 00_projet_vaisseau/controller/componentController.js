@@ -31,7 +31,7 @@ const ComponentController = {
         status: 'success',
         data: {
           component: component,
-          message: `Composante recherché 🔍 `,
+          message: `Composante recherché  `,
         },
       });
     } catch (err) {}

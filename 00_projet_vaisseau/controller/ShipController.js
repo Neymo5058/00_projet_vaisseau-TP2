@@ -29,10 +29,9 @@ const ShipController = {
         status: 'success',
         data: {
           ship: ship,
-          message: `Voici le vaisseaux recherché 🔍 `,
+          message: `Voici le vaisseaux recherché `,
         },
       });
-      console.log(ship);
     } catch (err) {}
   },
   create: async (req, res) => {
@@ -46,11 +45,10 @@ const ShipController = {
           ship: newShip,
         },
       });
-      console.log(ship);
     } catch (err) {
       res.status(400).json({
         status: 'fail',
-        message: 'Ce vaisseaux exsiste deja 🚩',
+        message: 'Ce vaisseaux exsiste deja',
       });
     }
   },
@@ -67,7 +65,7 @@ const ShipController = {
     } catch (err) {
       res.status(400).json({
         status: 'fail',
-        message: 'Les composante non pas populé',
+        message: `Les vaisseaux n'ont pas été créés`,
       });
     }
   },
@@ -82,7 +80,7 @@ const ShipController = {
     } catch (err) {
       res.status(404).json({
         status: 'fail',
-        message: `La composante a ete supprimée avec succes `,
+        message: `Le vaisseaux a ete supprimée avec succes `,
       });
     }
   },
