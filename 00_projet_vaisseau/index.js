@@ -22,9 +22,6 @@ app.get('/', (req, res) => {
   res.send(`Bienvenue sur la page principale`);
 });
 
-app.use('/', MainRouter);
-app.use('/', ShipRouter);
-
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
