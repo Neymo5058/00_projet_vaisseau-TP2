@@ -7,7 +7,7 @@ const port = 3000;
 
 app.use(express.json());
 
-const uri = "VOTRE_DB_CONNECTION_STRING";
+const uri = "mongodb+srv://jonatantd2:Anjo7784@cluster0.ducq7xk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
@@ -17,5 +17,5 @@ mongoose.connect(uri, clientOptions).then(() => console.log("Connected to DB"));
 app.use("/", MainRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`app listening on port ${port}`);
 });

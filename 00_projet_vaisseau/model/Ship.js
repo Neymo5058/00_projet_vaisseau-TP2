@@ -1,7 +1,7 @@
 class Ship {
   id;
   name;
-  type; // type: String = "fighter"
+  type;
   baseSpeed;
   baseHealth;
   health;
@@ -10,6 +10,8 @@ class Ship {
     hull: null,
     shield: null,
     engine: null,
+    weapon: null,
+    battery: null,
   };
 
   constructor(shipObj) {
@@ -19,91 +21,95 @@ class Ship {
     this.baseSpeed = shipObj.baseSpeed || null;
     this.baseHealth = shipObj.baseHealth || null;
     this.health = shipObj.health || null;
-    this.componentSlots = shipObj.componentSlots || {
-      thruster: null, // class: component
-      hull: null, // class: component
-      shield: null, // class: component
-      engine: null, // class: component
+    this.componentSlots = {
+      thruster: shipObj.componentSlots?.thruster || null,
+      hull: shipObj.componentSlots?.hull || null,
+      shield: shipObj.componentSlots?.shield || null,
+      engine: shipObj.componentSlots?.engine || null,
+      weapon: shipObj.componentSlots?.weapon || null,
+      battery: shipObj.componentSlots?.battery || null,
     };
   }
 
-  installcomponent(component, slot) {}
-
-  move() {
-    if (
-      !this.componentSlots?.engine?.isWorking() ||
-      !this.componentSlots?.thruster?.isWorking()
-    ) {
-      // TODO : the ship cant move if it doesnt have a working engine
+  installComponent(component, slot) {
+    if (!this.componentSlots.hasOwnProperty(slot)) {
+      console.warn(`Invalid slot: ${slot}`);
+      return;
     }
+    this.componentSlots[slot] = component;
   }
 
-  /**
-   * @param {*} target could be a ship or an asteroid or something else that has a health value
-   */
+  move() {
+    const engine = this.componentSlots.engine;
+    const thruster = this.componentSlots.thruster;
+
+    if (!engine?.isWorking?.() || !thruster?.isWorking?.()) {
+      console.warn("Ship cannot move — missing working engine or thruster");
+      return false;
+    }
+
+    const speedBoost =
+      (engine.stats?.speedBoost || 0) + (thruster.stats?.speedBoost || 0);
+    const totalSpeed = this.baseSpeed + speedBoost;
+
+    console.warn(`${this.name} is moving at speed ${totalSpeed}`);
+    return true;
+  }
+
   attack(target) {
-    if (
-      !this.componentSlots?.weapon?.isWorking() ||
-      !this.componentSlots?.weapon?.hasAmmo()
-    ) {
-      // TODO : the ship cant attack if it doesnt have a working weapon or ammo
+    const weapon = this.componentSlots.weapon;
+
+    if (!weapon?.isWorking?.() || !weapon?.hasAmmo?.()) {
+      console.warn("Ship cannot attack — weapon offline or out of ammo");
+      return false;
     }
+
+    const damage = weapon.stats?.damage || 10;
+    weapon.stats.ammo -= 1;
+
+    target.receiveDamage({ damage });
+    console.warn(`${this.name} attacked ${target.name} for ${damage} damage`);
+    return true;
   }
 
-  move() {
-    if (
-      !this.componentSlots?.engine?.isWorking() ||
-      !this.componentSlots?.thruster?.isWorking()
-    ) {
-      // TODO : the ship cant move if it doesnt have a working engine
-    }
-  }
-
-  /**
-   * @param {*} source could be a weapon or an asteroid or something else that has a damage value
-   */
   receiveDamage(source) {
-    // TODO : you have to decide how the damage calculation works
+    const incoming = source.damage || 0;
+    const shield = this.componentSlots.shield;
+    const shieldValue = shield?.stats?.absorption || 0;
+
+    const netDamage = Math.max(0, incoming - shieldValue);
+    this.health -= netDamage;
+
+    console.warn(`${this.name} received ${netDamage} damage (after shield)`);
+
+    if (this.health <= 0) {
+      this.health = 0;
+      console.warn(`${this.name} has been destroyed`);
+    }
   }
 
-  save(callback) {}
+  save(callback) {
+    // Placeholder
+  }
 
-  remove(callback) {}
+  remove(callback) {
+    // Placeholder
+  }
 
   toJSON() {
     return {
       id: this.id,
       name: this.name,
-      className: this.className,
       type: this.type,
       baseSpeed: this.baseSpeed,
       baseHealth: this.baseHealth,
       health: this.health,
-      componentSlots: {
-        thruster: this.componentSlots.thruster,
-        hull: this.componentSlots.hull,
-        shield: this.componentSlots.shield,
-        engine: this.componentSlots.engine,
-      },
+      componentSlots: this.componentSlots,
     };
   }
 
   toString() {
-    return JSON.stringify({
-      id: this.id,
-      name: this.name,
-      className: this.className,
-      type: this.type,
-      baseSpeed: this.baseSpeed,
-      baseHealth: this.baseHealth,
-      health: this.health,
-      componentSlots: {
-        thruster: this.componentSlots.thruster,
-        hull: this.componentSlots.hull,
-        shield: this.componentSlots.shield,
-        engine: this.componentSlots.engine,
-      },
-    });
+    return JSON.stringify(this.toJSON());
   }
 }
 
