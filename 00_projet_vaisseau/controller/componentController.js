@@ -80,6 +80,25 @@ const ComponentController = {
       next(err);
     }
   },
+  batchCreate: async (req, res, next) => {
+    try {
+      const components = await ComponentModel.create(req.body, {
+        ordered: false,
+      });
+
+      const savedComponents = await ComponentModel.find({
+        _id: { $in: components.map((component) => component._id) },
+      });
+      res.status(201).json({
+        status: 'success',
+        data: {
+          components: savedComponents,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
   remove: async (req, res, next) => {
     try {
       const component = await ComponentModel.findByIdAndDelete(
