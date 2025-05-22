@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import ShipModel from '../model/ShipModel.js';
 
 const ShipController = {
-  getAll: async (req, res) => {
+  getAll: async (req, res, next) => {
     try {
       const ships = await ShipModel.find()
         .populate('componentSlots.thruster')
@@ -19,13 +19,10 @@ const ShipController = {
         data: { ships },
       });
     } catch (err) {
-      res.status(500).json({
-        status: 'fail',
-        message: `Erreur interne du serveur`,
-      });
+      next(err);
     }
   },
-  getById: async (req, res) => {
+  getById: async (req, res, next) => {
     try {
       const ship = await ShipModel.findById(req.params.shipId)
         .populate('componentSlots.thruster')
@@ -37,10 +34,9 @@ const ShipController = {
         .populate('componentSlots.battery');
 
       if (!ship) {
-        return res.status(404).json({
-          status: 'fail',
-          message: 'Vaisseau introuvable',
-        });
+        const error = new Error('Vaisseau introuvable');
+        error.status = 404;
+        throw error;
       }
 
       res.status(200).json({
@@ -51,13 +47,10 @@ const ShipController = {
         },
       });
     } catch (err) {
-      res.status(500).json({
-        status: 'fail',
-        message: `Erreur interne du serveur `,
-      });
+      next(err);
     }
   },
-  create: async (req, res) => {
+  create: async (req, res, next) => {
     try {
       const newShip = await ShipModel.create(req.body);
       const populatedShip = await ShipModel.findById(newShip._id)
@@ -76,16 +69,38 @@ const ShipController = {
         },
       });
     } catch (err) {
-      res.status(400).json({
-        status: 'fail',
-        message:
-          'Mauvaise requête, ce vaisseau éxiste déja ou les données sont invalides ',
+      next(err);
+    }
+  },
+  update: async (req, res, next) => {
+    try {
+      const ship = await ShipModel.findOneAndUpdate(
+        { _id: req.params.shipId },
+        req.body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+      if (!ship) {
+        const error = new Error('Vaisseau introuvable');
+        error.status = 404;
+        throw error;
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: {
+          ship,
+        },
       });
+    } catch (err) {
+      next(err);
     }
   },
 
   // TODO Update
-  batchCreate: async (req, res) => {
+  batchCreate: async (req, res, next) => {
     try {
       const ships = await ShipModel.create(req.body, { ordered: false });
 
@@ -107,13 +122,10 @@ const ShipController = {
         },
       });
     } catch (err) {
-      res.status(400).json({
-        status: 'fail',
-        message: `Les vaisseaux n'ont pas été créés ou erreurs`,
-      });
+      next(err);
     }
   },
-  remove: async (req, res) => {
+  remove: async (req, res, next) => {
     try {
       const ship = await ShipModel.findByIdAndDelete(req.params.shipId)
         .populate('componentSlots.thruster')
@@ -125,10 +137,9 @@ const ShipController = {
         .populate('componentSlots.battery');
 
       if (!ship) {
-        return res.status(404).json({
-          status: 'fail',
-          message: `Vaisseau introuvable`,
-        });
+        const error = new Error('Vaisseau introuvable');
+        error.status = 404;
+        throw error;
       }
 
       res.status(200).json({
@@ -137,10 +148,7 @@ const ShipController = {
         data: { ship },
       });
     } catch (err) {
-      res.status(500).json({
-        status: 'fail',
-        message: `Erreur lors de la supression `,
-      });
+      next(err);
     }
   },
 };

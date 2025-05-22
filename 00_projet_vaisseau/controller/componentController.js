@@ -39,7 +39,7 @@ const ComponentController = {
       const { name, category } = req.body;
       if (!name || !category) {
         const error = new Error('Veuillez fournir un nom et une catégorie');
-        error.status = 404;
+        error.status = 400;
         throw error;
       }
       const newComponent = await ComponentModel.create(req.body);
