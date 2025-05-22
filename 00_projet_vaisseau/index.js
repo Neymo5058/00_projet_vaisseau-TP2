@@ -22,6 +22,21 @@ app.get('/', (req, res) => {
   res.send(`Bienvenue sur la page principale`);
 });
 
+app.use((err, req, res, next) => {
+  if (err.name === 'ValidationError') {
+    const errors = Object.values(err.errors).map((e) => e.message);
+    return res.status(400).json({
+      status: 'fail',
+      errors,
+    });
+  }
+
+  res.status(err.status || 500).json({
+    status: 'error',
+    message: err.message || 'Erreur interne du serveur',
+  });
+});
+
 app.use('/', MainRouter);
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

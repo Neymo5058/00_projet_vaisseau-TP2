@@ -10,6 +10,15 @@ const ComponentSchema = new mongoose.Schema({
   category: {
     type: String,
     trim: true,
+    enum: [
+      'weapon',
+      'engine',
+      'thruster',
+      'shield',
+      'battery',
+      'hull',
+      'radar',
+    ],
     required: [true, 'Une composante doit avoir une categorie'],
   },
   effect: {

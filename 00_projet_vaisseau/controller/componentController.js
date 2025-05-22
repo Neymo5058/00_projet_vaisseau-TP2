@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import ComponentModel from '../model/componentModel.js';
 
 const ComponentController = {
-  getAll: async (req, res) => {
+  getAll: async (req, res, next) => {
     try {
       const components = await ComponentModel.find();
 
@@ -12,20 +12,17 @@ const ComponentController = {
         data: { components },
       });
     } catch (err) {
-      res.status(500).json({
-        status: 'fail',
-        message: `Composante non-trouvé`,
-      });
+      next(err);
     }
   },
-  getById: async (req, res) => {
+  getById: async (req, res, next) => {
     try {
       const component = await ComponentModel.findById(req.params.componentId);
-      if (!component)
-        return res.status(404).json({
-          status: 'fail',
-          message: 'Composante recherché ',
-        });
+      if (!component) {
+        const error = new Error('Composante introuvable');
+        error.status = 404;
+        throw error;
+      }
 
       res.status(200).json({
         status: 'success',
@@ -33,20 +30,17 @@ const ComponentController = {
         data: { component },
       });
     } catch (err) {
-      res.status(500).json({
-        status: 'fail',
-        message: `Erreur interne du serveur `,
-      });
+      next(err);
     }
   },
-  create: async (req, res) => {
+  // TODO
+  create: async (req, res, next) => {
     try {
       const { name, category } = req.body;
       if (!name || !category) {
-        return res.status(400).json({
-          status: 'fail',
-          message: 'Veuillez fournir un nom et une catégorie',
-        });
+        const error = new Error('Veuillez fournir un nom et une catégorie');
+        error.status = 404;
+        throw error;
       }
       const newComponent = await ComponentModel.create(req.body);
 
@@ -57,14 +51,10 @@ const ComponentController = {
         },
       });
     } catch (err) {
-      res.status(400).json({
-        status: 'fail',
-        message:
-          'Mauvaise requête, cette composante éxiste déja ou les données sont invalides',
-      });
+      next(err);
     }
   },
-  update: async (req, res) => {
+  update: async (req, res, next) => {
     try {
       const component = await ComponentModel.findOneAndUpdate(
         { _id: req.params.componentId },
@@ -74,7 +64,11 @@ const ComponentController = {
           runValidators: true,
         }
       );
-      if (!component) return res.status(404).json({ message: 'Introuvable' });
+      if (!component) {
+        const error = new Error('Composante introuvable');
+        error.status = 404;
+        throw error;
+      }
 
       res.status(200).json({
         status: 'success',
@@ -83,29 +77,26 @@ const ComponentController = {
         },
       });
     } catch (err) {
-      res.status(400).json({
-        status: 'fail',
-        message: 'Mauvaise requete, donnée invalides',
-      });
+      next(err);
     }
   },
-  remove: async (req, res) => {
+  remove: async (req, res, next) => {
     try {
       const component = await ComponentModel.findByIdAndDelete(
         req.params.componentId
       );
-      if (!component)
-        return res.status(404).json({ message: 'Composante Introuvable' });
+      if (!component) {
+        const error = new Error('Composante introuvable');
+        error.status = 404;
+        throw error;
+      }
 
       res.status(200).json({
         status: 'success',
         data: null,
       });
     } catch (err) {
-      res.status(404).json({
-        status: 'fail',
-        message: `Auncune composnte trouvé avec cet ID `,
-      });
+      next(err);
     }
   },
 };

@@ -83,6 +83,8 @@ const ShipController = {
       });
     }
   },
+
+  // TODO Update
   batchCreate: async (req, res) => {
     try {
       const ships = await ShipModel.create(req.body, { ordered: false });

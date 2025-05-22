@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const ShipSchema = new mongoose.Schema({
-  _id: mongoose.SchemaTypes.ObjectId,
   name: String,
   type: String,
   baseSpeed: Number,
