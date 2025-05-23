@@ -44,12 +44,11 @@ class Ship {
     const thruster = this.componentSlots.thruster;
 
     if (!engine?.isWorking?.() || !thruster?.isWorking?.()) {
-      console.warn("Ship cannot move — missing working engine or thruster");
+      console.warn('Ship cannot move — missing working engine or thruster');
       return false;
     }
 
-    const speedBoost =
-      (engine.stats?.speedBoost || 0) + (thruster.stats?.speedBoost || 0);
+    const speedBoost = (engine.stats?.speedBoost || 0) + (thruster.stats?.speedBoost || 0);
     const totalSpeed = this.baseSpeed + speedBoost;
 
     console.warn(`${this.name} is moving at speed ${totalSpeed}`);
@@ -60,7 +59,7 @@ class Ship {
     const weapon = this.componentSlots.weapon;
 
     if (!weapon?.isWorking?.() || !weapon?.hasAmmo?.()) {
-      console.warn("Ship cannot attack — weapon offline or out of ammo");
+      console.warn('Ship cannot attack — weapon offline or out of ammo');
       return false;
     }
 
