@@ -1,7 +1,7 @@
 [
   {
     "name": "Jedi Starfighter",
-    "type": "interceptor",
+    "category": "interceptor",
     "baseSpeed": 180,
     "baseHealth": 250,
     "health": 250,
@@ -9,7 +9,7 @@
   },
   {
     "name": "ARC-170",
-    "type": "fighter",
+    "category": "fighter",
     "baseSpeed": 140,
     "baseHealth": 600,
     "health": 600,
@@ -17,7 +17,7 @@
   },
   {
     "name": "V-19 Torrent",
-    "type": "scout",
+    "category": "scout",
     "baseSpeed": 200,
     "baseHealth": 300,
     "health": 300,
@@ -25,7 +25,7 @@
   },
   {
     "name": "Republic Gunship",
-    "type": "transport",
+    "category": "transport",
     "baseSpeed": 100,
     "baseHealth": 900,
     "health": 900,
@@ -33,7 +33,7 @@
   },
   {
     "name": "Venator-Class Destroyer",
-    "type": "battleship",
+    "category": "battleship",
     "baseSpeed": 70,
     "baseHealth": 2000,
     "health": 2000,
@@ -41,7 +41,7 @@
   },
   {
     "name": "Recusant-Class Destroyer",
-    "type": "battleship",
+    "category": "battleship",
     "baseSpeed": 65,
     "baseHealth": 1800,
     "health": 1800,
@@ -49,7 +49,7 @@
   },
   {
     "name": "Droid Tri-Fighter",
-    "type": "interceptor",
+    "category": "interceptor",
     "baseSpeed": 190,
     "baseHealth": 220,
     "health": 220,
@@ -57,7 +57,7 @@
   },
   {
     "name": "Hyena Bomber",
-    "type": "bomber",
+    "category": "bomber",
     "baseSpeed": 120,
     "baseHealth": 500,
     "health": 500,

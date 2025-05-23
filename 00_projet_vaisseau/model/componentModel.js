@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ComponentSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  type: {
+  category: {
     type: String,
-    enum: ["weapon", "engine", "thruster", "shield", "battery", "hull", "radar"],
-    required: true
+    enum: ['weapon', 'engine', 'thruster', 'shield', 'battery', 'hull', 'radar'],
+    required: true,
   },
   stats: {
     damage: { type: Number, default: 0 },
@@ -14,10 +14,10 @@ const ComponentSchema = new mongoose.Schema({
     healthBoost: { type: Number, default: 0 },
     absorption: { type: Number, default: 0 },
     durability: { type: Number, default: 100 },
-    detectionRange: { type: Number, default: 0 } 
-  }
+    detectionRange: { type: Number, default: 0 },
+  },
 });
 
-const ComponentModel = mongoose.model("component", ComponentSchema);
+const ComponentModel = mongoose.model('component', ComponentSchema);
 
 export default ComponentModel;

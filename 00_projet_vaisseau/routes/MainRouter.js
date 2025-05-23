@@ -8,7 +8,7 @@ MainRouter.use('/ships', ShipRouter);
 MainRouter.use('/components', ComponentRouter);
 
 // Optional combat route between ships
-MainRouter.post('/attack', async (req, res) => {
+MainRouter.post('/combat', async (req, res) => {
   // Example expected: { attackerShipId: "xxx", defenderShipId: "yyy" }
   res.status(501).json({ message: 'Combat logic not implemented yet' });
 });

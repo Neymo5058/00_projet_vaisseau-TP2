@@ -1,7 +1,7 @@
 class Ship {
   id;
   name;
-  type;
+  category;
   baseSpeed;
   baseHealth;
   health;
@@ -17,7 +17,7 @@ class Ship {
   constructor(shipObj) {
     this.id = shipObj.id || shipObj._id || null;
     this.name = shipObj.name || null;
-    this.type = shipObj.type || null;
+    this.category = shipObj.category || null;
     this.baseSpeed = shipObj.baseSpeed || null;
     this.baseHealth = shipObj.baseHealth || null;
     this.health = shipObj.health || null;
@@ -99,7 +99,7 @@ class Ship {
     return {
       id: this.id,
       name: this.name,
-      type: this.type,
+      category: this.category,
       baseSpeed: this.baseSpeed,
       baseHealth: this.baseHealth,
       health: this.health,

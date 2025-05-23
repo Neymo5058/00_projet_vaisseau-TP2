@@ -29,7 +29,7 @@ const ShipController = {
       const reordered = {
         _id: ship._id,
         name: ship.name,
-        type: ship.type,
+        category: ship.category,
         baseSpeed: ship.baseSpeed,
         baseHealth: ship.baseHealth,
         health: ship.health,
@@ -41,7 +41,7 @@ const ShipController = {
               ? {
                   _id: comp._id,
                   name: comp.name,
-                  type: comp.type,
+                  category: comp.category,
                   stats: comp.stats,
                   __v: comp.__v,
                 }

@@ -1,62 +1,128 @@
-import ComponentModel from "../model/ComponentModel.js";
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
+import ComponentModel from '../model/componentModel.js';
 
 const ComponentController = {
-  getAll: async (req, res) => {
+  getAll: async (req, res, next) => {
     try {
       const components = await ComponentModel.find();
-      res.status(200).json(components);
+      res.status(200).json({
+        status: 'success',
+        results: components.length,
+        data: { components },
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      next(err);
     }
   },
 
-  getById: async (req, res) => {
+  getById: async (req, res, next) => {
     try {
-      const component = await ComponentModel.findById(req.params.id);
-      if (!component) return res.status(404).json({ error: "Component not found" });
-      res.status(200).json(component);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  },
-
-  create: async (req, res) => {
-    try {
-      const component = new ComponentModel({ ...req.body, _id: new Types.ObjectId() });
-      await component.save();
-      res.status(201).json(component);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  },
-
-  batchCreate: async (req, res) => {
-    try {
-      if (!Array.isArray(req.body)) {
-        return res.status(400).json({ error: "Request body must be an array" });
+      const component = await ComponentModel.findById(req.params.id || req.params.componentId);
+      if (!component) {
+        const error = new Error('Component not found');
+        error.status = 404;
+        throw error;
       }
 
-      const components = req.body.map(data => ({
-        ...data,
-        _id: new Types.ObjectId()
-      }));
-      const result = await ComponentModel.insertMany(components);
-      res.status(201).json(result);
+      res.status(200).json({
+        status: 'success',
+        message: 'Component found ',
+        data: { component },
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      next(err);
     }
   },
 
-  remove: async (req, res) => {
+  create: async (req, res, next) => {
     try {
-      const deleted = await ComponentModel.findByIdAndDelete(req.params.id);
-      if (!deleted) return res.status(404).json({ error: "Component not found" });
-      res.status(200).json({ message: "Component deleted" });
+      const { name, category } = req.body;
+      if (!name || !category) {
+        const error = new Error('Requested body is invalid');
+        error.status = 400;
+        throw error;
+      }
+
+      const component = new ComponentModel({ ...req.body, _id: new Types.ObjectId() });
+      await component.save();
+
+      res.status(201).json({
+        status: 'success',
+        data: { component },
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      if (err.code === 11000) {
+        err.status = 409;
+        err.message = 'A component with that name already exists.';
+      }
+      next(err);
     }
-  }
+  },
+
+  update: async (req, res, next) => {
+    try {
+      const component = await ComponentModel.findOneAndUpdate({ _id: req.params.componentId }, req.body, {
+        new: true,
+        runValidators: true,
+      });
+
+      if (!component) {
+        const error = new Error('Component not found');
+        error.status = 404;
+        throw error;
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: { component },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  batchCreate: async (req, res, next) => {
+    try {
+      if (!Array.isArray(req.body)) {
+        const error = new Error('Request body must be an array');
+        error.status = 400;
+        throw error;
+      }
+
+      const components = req.body.map((data) => ({
+        ...data,
+        _id: new Types.ObjectId(),
+      }));
+
+      const result = await ComponentModel.insertMany(components, { ordered: true });
+
+      res.status(201).json({
+        status: 'success',
+        data: { components: result },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  remove: async (req, res, next) => {
+    try {
+      const deleted = await ComponentModel.findByIdAndDelete(req.params.id || req.params.componentId);
+      if (!deleted) {
+        const error = new Error('Component not found');
+        error.status = 404;
+        throw error;
+      }
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Component deleted',
+        data: null,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
 
 export default ComponentController;
