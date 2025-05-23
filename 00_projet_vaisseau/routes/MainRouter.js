@@ -6,14 +6,9 @@ const MainRouter = express.Router();
 
 MainRouter.use('/ships', ShipRouter);
 MainRouter.use('/components', ComponentRouter);
-// Ships API routes
-MainRouter.use('/ships', ShipRouter);
-
-// Components API routes
-MainRouter.use('/components', ComponentRouter);
 
 // Optional combat route between ships
-MainRouter.post('/combat', async (req, res) => {
+MainRouter.post('/attack', async (req, res) => {
   // Example expected: { attackerShipId: "xxx", defenderShipId: "yyy" }
   res.status(501).json({ message: 'Combat logic not implemented yet' });
 });

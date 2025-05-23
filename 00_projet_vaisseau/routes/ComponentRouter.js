@@ -1,12 +1,11 @@
-import express from "express";
-import ComponentController from "../controller/ComponentController.js";
+import express from 'express';
+import ComponentController from '../controller/componentController.js';
 
 const ComponentRouter = express.Router();
-
-ComponentRouter.get("/", ComponentController.getAll);
-ComponentRouter.get("/:id", ComponentController.getById);
-ComponentRouter.post("/", ComponentController.create);
-ComponentRouter.post("/batchCreate", ComponentController.batchCreate);
-ComponentRouter.delete("/:id", ComponentController.remove);
+ComponentRouter.post('/', ComponentController.create);
+ComponentRouter.get('/', ComponentController.getAll);
+ComponentRouter.get('/:componentId', ComponentController.getById);
+ComponentRouter.delete('/:componentId', ComponentController.remove);
+ComponentRouter.patch('/:componentId', ComponentController.update);
 
 export default ComponentRouter;

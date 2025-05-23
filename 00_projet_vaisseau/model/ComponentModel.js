@@ -1,23 +1,39 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ComponentSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: {
+  name: {
     type: String,
-    enum: ["weapon", "engine", "thruster", "shield", "battery", "hull", "radar"],
-    required: true
+    required: [true, 'Une composante doit avoir un nom'],
+    unique: true,
+    trim: true,
   },
-  stats: {
-    damage: { type: Number, default: 0 },
-    ammo: { type: Number, default: 0 },
-    speedBoost: { type: Number, default: 0 },
-    healthBoost: { type: Number, default: 0 },
-    absorption: { type: Number, default: 0 },
-    durability: { type: Number, default: 100 },
-    detectionRange: { type: Number, default: 0 } 
-  }
+  category: {
+    type: String,
+    trim: true,
+    enum: [
+      'weapon',
+      'engine',
+      'thruster',
+      'shield',
+      'battery',
+      'hull',
+      'radar',
+    ],
+    required: [true, 'Une composante doit avoir une categorie'],
+  },
+  effect: {
+    type: String,
+  },
+  ammo: {
+    type: Number,
+    default: 0,
+  },
+  working: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const ComponentModel = mongoose.model("component", ComponentSchema);
+const ComponentModel = mongoose.model('component', ComponentSchema);
 
 export default ComponentModel;
