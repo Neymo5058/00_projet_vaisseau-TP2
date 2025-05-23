@@ -27,12 +27,36 @@ const ShipController = {
         populateAllSlots
       );
       if (!ship) return res.status(404).json({ error: "Ship not found" });
-      res.status(200).json(ship);
+
+      const reordered = {
+        _id: ship._id,
+        name: ship.name,
+        type: ship.type,
+        baseSpeed: ship.baseSpeed,
+        baseHealth: ship.baseHealth,
+        health: ship.health,
+        __v: ship.__v,
+        componentSlots: Object.fromEntries(
+          Object.entries(ship.componentSlots).map(([slot, comp]) => [
+            slot,
+            comp && comp.stats
+              ? {
+                  _id: comp._id,
+                  name: comp.name,
+                  type: comp.type,
+                  stats: comp.stats,
+                  __v: comp.__v,
+                }
+              : comp,
+          ])
+        ),
+      };
+
+      res.status(200).json(reordered);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },
-
   create: async (req, res) => {
     try {
       const ship = new ShipModel({ ...req.body, _id: new Types.ObjectId() });
@@ -125,6 +149,40 @@ const ShipController = {
       });
     } catch (err) {
       console.error("Attack error:", err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+  move: async (req, res) => {
+    try {
+      const ship = await ShipModel.findById(req.params.shipId).populate([
+        "componentSlots.engine",
+        "componentSlots.thruster",
+      ]);
+
+      if (!ship) {
+        return res.status(404).json({ error: "Ship not found" });
+      }
+
+      const engineBoost = ship.componentSlots.engine?.stats?.speedBoost || 0;
+      const thrusterBoost =
+        ship.componentSlots.thruster?.stats?.speedBoost || 0;
+
+      if (engineBoost <= 0 || thrusterBoost <= 0) {
+        return res
+          .status(400)
+          .json({ error: "Engine or thruster not functional." });
+      }
+
+      const totalSpeed = ship.baseSpeed + engineBoost + thrusterBoost;
+
+      res.status(200).json({
+        message: "Ship can move.",
+        baseSpeed: ship.baseSpeed,
+        engineBoost,
+        thrusterBoost,
+        totalSpeed,
+      });
+    } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },

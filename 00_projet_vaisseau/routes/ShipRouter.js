@@ -9,5 +9,6 @@ ShipRouter.post("/", ShipController.create);
 ShipRouter.post("/batchCreate", ShipController.batchCreate);
 ShipRouter.delete("/:shipId", ShipController.remove);
 ShipRouter.post("/:shipId/attack", ShipController.attack);
+ShipRouter.post("/:shipId/move", ShipController.move);
 
 export default ShipRouter;
