@@ -1,14 +1,14 @@
-import ShipModel from "../model/ShipModel.js";
-import { Types } from "mongoose";
+import ShipModel from '../model/ShipModel.js';
+import { Types } from 'mongoose';
 
 const populateAllSlots = [
-  "componentSlots.weapon",
-  "componentSlots.engine",
-  "componentSlots.thruster",
-  "componentSlots.shield",
-  "componentSlots.battery",
-  "componentSlots.hull",
-  "componentSlots.radar",
+  'componentSlots.weapon',
+  'componentSlots.engine',
+  'componentSlots.thruster',
+  'componentSlots.shield',
+  'componentSlots.battery',
+  'componentSlots.hull',
+  'componentSlots.radar',
 ];
 
 const ShipController = {
@@ -23,10 +23,8 @@ const ShipController = {
 
   getById: async (req, res) => {
     try {
-      const ship = await ShipModel.findById(req.params.shipId).populate(
-        populateAllSlots
-      );
-      if (!ship) return res.status(404).json({ error: "Ship not found" });
+      const ship = await ShipModel.findById(req.params.shipId).populate(populateAllSlots);
+      if (!ship) return res.status(404).json({ error: 'Ship not found' });
 
       const reordered = {
         _id: ship._id,
@@ -83,8 +81,8 @@ const ShipController = {
   remove: async (req, res) => {
     try {
       const deleted = await ShipModel.findByIdAndDelete(req.params.shipId);
-      if (!deleted) return res.status(404).json({ error: "Ship not found" });
-      res.status(200).json({ message: "Ship deleted successfully" });
+      if (!deleted) return res.status(404).json({ error: 'Ship not found' });
+      res.status(200).json({ message: 'Ship deleted successfully' });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
@@ -95,42 +93,27 @@ const ShipController = {
     const { defenderShipId } = req.body;
 
     try {
-      const attacker = await ShipModel.findById(shipId).populate(
-        populateAllSlots
-      );
-      const defender = await ShipModel.findById(defenderShipId).populate(
-        populateAllSlots
-      );
+      const attacker = await ShipModel.findById(shipId).populate(populateAllSlots);
+      const defender = await ShipModel.findById(defenderShipId).populate(populateAllSlots);
 
       if (!attacker || !defender) {
-        return res
-          .status(404)
-          .json({ error: "Attacker or defender not found" });
+        return res.status(404).json({ error: 'Attacker or defender not found' });
       }
 
       const weapon = attacker.componentSlots.weapon;
       if (!weapon) {
-        return res
-          .status(400)
-          .json({ error: "Attacker has no weapon installed." });
+        return res.status(400).json({ error: 'Attacker has no weapon installed.' });
       }
 
-      const damage =
-        typeof weapon.stats?.damage === "number" ? weapon.stats.damage : 0;
-      const ammo =
-        typeof weapon.stats?.ammo === "number" ? weapon.stats.ammo : 0;
+      const damage = typeof weapon.stats?.damage === 'number' ? weapon.stats.damage : 0;
+      const ammo = typeof weapon.stats?.ammo === 'number' ? weapon.stats.ammo : 0;
 
       if (ammo <= 0) {
-        return res
-          .status(400)
-          .json({ error: "Attacker's weapon has no ammo." });
+        return res.status(400).json({ error: "Attacker's weapon has no ammo." });
       }
 
       const shield = defender.componentSlots.shield;
-      const absorption =
-        typeof shield?.stats?.absorption === "number"
-          ? shield.stats.absorption
-          : 0;
+      const absorption = typeof shield?.stats?.absorption === 'number' ? shield.stats.absorption : 0;
 
       const netDamage = Math.max(0, damage - absorption);
       defender.health -= netDamage;
@@ -148,35 +131,32 @@ const ShipController = {
         isDefenderDestroyed: defender.health === 0,
       });
     } catch (err) {
-      console.error("Attack error:", err);
+      console.error('Attack error:', err);
       res.status(500).json({ error: err.message });
     }
   },
   move: async (req, res) => {
     try {
       const ship = await ShipModel.findById(req.params.shipId).populate([
-        "componentSlots.engine",
-        "componentSlots.thruster",
+        'componentSlots.engine',
+        'componentSlots.thruster',
       ]);
 
       if (!ship) {
-        return res.status(404).json({ error: "Ship not found" });
+        return res.status(404).json({ error: 'Ship not found' });
       }
 
       const engineBoost = ship.componentSlots.engine?.stats?.speedBoost || 0;
-      const thrusterBoost =
-        ship.componentSlots.thruster?.stats?.speedBoost || 0;
+      const thrusterBoost = ship.componentSlots.thruster?.stats?.speedBoost || 0;
 
       if (engineBoost <= 0 || thrusterBoost <= 0) {
-        return res
-          .status(400)
-          .json({ error: "Engine or thruster not functional." });
+        return res.status(400).json({ error: 'Engine or thruster not functional.' });
       }
 
       const totalSpeed = ship.baseSpeed + engineBoost + thrusterBoost;
 
       res.status(200).json({
-        message: "Ship can move.",
+        message: 'Ship can move.',
         baseSpeed: ship.baseSpeed,
         engineBoost,
         thrusterBoost,

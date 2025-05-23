@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ShipSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -9,40 +9,42 @@ const ShipSchema = new mongoose.Schema({
   componentSlots: {
     thruster: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "component",
+      ref: 'component',
       default: null,
     },
     hull: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "component",
+      ref: 'component',
       default: null,
     },
     shield: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "component",
+      ref: 'component',
       default: null,
     },
     engine: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "component",
+      ref: 'component',
       default: null,
     },
     weapon: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "component",
+      ref: 'component',
       default: null,
     },
     battery: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "component",
+      ref: 'component',
       default: null,
     },
     radar: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "component",
+      ref: 'component',
       default: null,
     },
   },
 });
 
-export default mongoose.model("ship", ShipSchema);
+const ShipModel = mongoose.model('Ship', ShipSchema);
+
+export default ShipModel;
