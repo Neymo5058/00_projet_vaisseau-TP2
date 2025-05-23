@@ -56,14 +56,10 @@ const ComponentController = {
   },
   update: async (req, res, next) => {
     try {
-      const component = await ComponentModel.findOneAndUpdate(
-        { _id: req.params.componentId },
-        req.body,
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+      const component = await ComponentModel.findOneAndUpdate({ _id: req.params.componentId }, req.body, {
+        new: true,
+        runValidators: true,
+      });
       if (!component) {
         const error = new Error('Composante introuvable');
         error.status = 404;
@@ -101,9 +97,7 @@ const ComponentController = {
   },
   remove: async (req, res, next) => {
     try {
-      const component = await ComponentModel.findByIdAndDelete(
-        req.params.componentId
-      );
+      const component = await ComponentModel.findByIdAndDelete(req.params.componentId);
       if (!component) {
         const error = new Error('Composante introuvable');
         error.status = 404;

@@ -41,10 +41,7 @@ class Ship {
   }
 
   move() {
-    if (
-      !this.componentSlots?.engine?.isWorking() ||
-      !this.componentSlots?.thruster?.isWorking()
-    ) {
+    if (!this.componentSlots?.engine?.isWorking() || !this.componentSlots?.thruster?.isWorking()) {
       // TODO : the ship cant move if it doesnt have a working engine
     }
   }
@@ -53,10 +50,9 @@ class Ship {
    * @param {*} target could be a ship or an asteroid or something else that has a health value
    */
   attack(target) {
-    if (
-      !this.componentSlots?.weapon?.isWorking() ||
-      !this.componentSlots?.weapon?.hasAmmo()
-    ) {
+    const weapon = this.componentSlots.weapon;
+
+    if (!this.componentSlots?.weapon?.isWorking() || !this.componentSlots?.weapon?.hasAmmo()) {
       // TODO : the ship cant attack if it doesnt have a working weapon or ammo
     }
   }

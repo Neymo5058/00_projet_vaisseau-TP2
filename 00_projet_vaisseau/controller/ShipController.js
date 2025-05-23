@@ -1,5 +1,7 @@
-import { Types } from 'mongoose';
+import mongoose from 'mongoose';
 import ShipModel from '../model/ShipModel.js';
+import Ship from '../model/Ship.js';
+import ComponentModel from '../model/componentModel.js';
 
 const ShipController = {
   getAll: async (req, res, next) => {
@@ -74,14 +76,10 @@ const ShipController = {
   },
   update: async (req, res, next) => {
     try {
-      const ship = await ShipModel.findOneAndUpdate(
-        { _id: req.params.shipId },
-        req.body,
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+      const ship = await ShipModel.findOneAndUpdate({ _id: req.params.shipId }, req.body, {
+        new: true,
+        runValidators: true,
+      });
       if (!ship) {
         const error = new Error('Vaisseau introuvable');
         error.status = 404;
@@ -145,6 +143,36 @@ const ShipController = {
       res.status(200).json({
         status: 'success',
         message: 'Vaisseau supprimé avec succes',
+        data: { ship },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+  installcomponent: async (req, res, next) => {
+    try {
+      const ship = await ShipModel.findById(req.params.shipId);
+      if (!ship) {
+        throw new Error('Vaisseau introuvable');
+      }
+
+      const { componentId, slot } = req.body;
+
+      if (!slot || !ship.componentSlots?.hasOwnProperty(slot)) {
+        throw new Error('Emplacement introuvable');
+      }
+
+      const component = await ComponentModel.findById(componentId);
+      if (!component || !component.working) {
+        throw new Error('Cette composante ne fonctionne plus ou est introuvable');
+      }
+
+      ship.componentSlots[slot] = component._id;
+      await ship.save();
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Composante installée avec succes',
         data: { ship },
       });
     } catch (err) {

@@ -7,6 +7,7 @@ ShipRouter.get('/', ShipController.getAll);
 ShipRouter.get('/:shipId', ShipController.getById);
 ShipRouter.post('/batch', ShipController.batchCreate);
 ShipRouter.delete('/:shipId', ShipController.remove);
+ShipRouter.patch('/:shipId/install', ShipController.installcomponent);
 
 // TODO : you have to implements the routes to use the ships
 ShipRouter.post('/:shipId/attack', () => {
