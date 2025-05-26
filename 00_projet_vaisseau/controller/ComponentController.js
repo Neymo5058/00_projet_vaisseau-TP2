@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import ComponentModel from '../model/componentModel.js';
+import ComponentModel from '../model/ComponentModel.js';
 
 const ComponentController = {
   getAll: async (req, res, next) => {
