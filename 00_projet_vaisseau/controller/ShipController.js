@@ -1,5 +1,6 @@
 import ShipModel from '../model/ShipModel.js';
 import { Types } from 'mongoose';
+import ComponentModel from '../model/ComponentModel.js';
 
 const populateAllSlots = [
   'componentSlots.weapon',
@@ -85,7 +86,24 @@ const ShipController = {
   },
   create: async (req, res) => {
     try {
-      const ship = new ShipModel({ ...req.body, _id: new Types.ObjectId() });
+      const componentCategories = ['weapon', 'engine', 'thruster', 'shield', 'battery', 'hull', 'radar'];
+
+      const componentsByCategory = {};
+
+      for (const category of componentCategories) {
+        const found = await ComponentModel.findOne({ category });
+        if (!found) {
+          return res.status(400).json({ error: `No component found for category: ${category}` });
+        }
+        componentsByCategory[category] = found._id;
+      }
+
+      const ship = new ShipModel({
+        ...req.body,
+        _id: new Types.ObjectId(),
+        componentSlots: componentsByCategory,
+      });
+
       await ship.save();
       res.status(201).json(ship);
     } catch (err) {
@@ -95,10 +113,27 @@ const ShipController = {
 
   batchCreate: async (req, res) => {
     try {
+      if (!Array.isArray(req.body)) {
+        return res.status(400).json({ error: 'Request body must be an array' });
+      }
+
+      const componentCategories = ['weapon', 'engine', 'thruster', 'shield', 'battery', 'hull', 'radar'];
+
+      const componentsByCategory = {};
+      for (const category of componentCategories) {
+        const comp = await ComponentModel.findOne({ category });
+        if (!comp) {
+          return res.status(400).json({ error: `Missing component of category: ${category}` });
+        }
+        componentsByCategory[category] = comp._id;
+      }
+
       const ships = req.body.map((data) => ({
         ...data,
         _id: new Types.ObjectId(),
+        componentSlots: { ...componentsByCategory },
       }));
+
       const result = await ShipModel.insertMany(ships);
       res.status(201).json(result);
     } catch (err) {

@@ -18,6 +18,6 @@ const ComponentSchema = new mongoose.Schema({
   },
 });
 
-const ComponentModel = mongoose.model('component', ComponentSchema);
+const ComponentModel = mongoose.models.component || mongoose.model('component', ComponentSchema);
 
 export default ComponentModel;
