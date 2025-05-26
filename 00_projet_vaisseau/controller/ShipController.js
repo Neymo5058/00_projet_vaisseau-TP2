@@ -15,12 +15,40 @@ const ShipController = {
   getAll: async (req, res) => {
     try {
       const ships = await ShipModel.find().populate(populateAllSlots);
-      res.status(200).json(ships);
+
+      const reorderedShips = ships.map((ship) => ({
+        _id: ship._id,
+        name: ship.name,
+        category: ship.category,
+        baseSpeed: ship.baseSpeed,
+        baseHealth: ship.baseHealth,
+        health: ship.health,
+        __v: ship.__v,
+        componentSlots: Object.fromEntries(
+          Object.entries(ship.componentSlots).map(([slot, comp]) => [
+            slot,
+            comp && comp.stats
+              ? {
+                  _id: comp._id,
+                  name: comp.name,
+                  category: comp.category,
+                  stats: comp.stats,
+                  __v: comp.__v,
+                }
+              : comp,
+          ])
+        ),
+      }));
+
+      res.status(200).json({
+        status: 'success',
+        results: reorderedShips.length,
+        data: { ships: reorderedShips },
+      });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },
-
   getById: async (req, res) => {
     try {
       const ship = await ShipModel.findById(req.params.shipId).populate(populateAllSlots);
