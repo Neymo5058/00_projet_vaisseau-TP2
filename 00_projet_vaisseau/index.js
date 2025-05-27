@@ -8,7 +8,7 @@ const port = 3000;
 app.use(express.json());
 
 const uri =
-  'mongodb+srv://username123:sami5058@cluster0.dy6dz3y.mongodb.net/00_projet_vaisseau?retryWrites=true&w=majority&appName=Cluster0';
+  'mongodb+srv://jonatantd2:Anjo7784@cluster0.ducq7xk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 const clientOptions = {
   serverApi: { version: '1', strict: true, deprecationErrors: true },

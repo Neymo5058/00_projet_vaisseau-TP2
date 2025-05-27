@@ -123,7 +123,7 @@ const ShipController = {
       for (const category of componentCategories) {
         const comp = await ComponentModel.findOne({ category });
         if (!comp) {
-          return res.status(400).json({ error: `Missing component of category: ${category}` });
+          return res.status(400).json({ error: `Missing components` });
         }
         componentsByCategory[category] = comp._id;
       }
